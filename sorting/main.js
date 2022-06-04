@@ -7,6 +7,13 @@ const step = document.querySelector("#step")
 let values = []
 let steps = []
 let sorted = false
+let compared = []
+/*
+    OPCODE  |   OPRAND
+    __________________
+    0       |   SWAP
+    1       |   COMPARE
+*/
 
 update.addEventListener("click", function () {
     let rawValues = document.querySelector("#input").value
@@ -31,12 +38,13 @@ sort.addEventListener("click", function () {
     for (let i=0; i<values.length; i++) {
         min = i;
         for (let j=i+1; j<values.length; j++) {
+            steps.push([1, j, min])
             if(values[j]<values[min]) {
                 min = j;
             }
         }
         // swap(i, min)
-        steps.push([i, min])
+        steps.push([0, i, min])
         let temp = values[i]
         values[i] = values[min]
         values[min] = temp
@@ -50,10 +58,35 @@ step.addEventListener("click", function () {
     }
     if(steps.length>0) {
         let currentStep = steps.shift()
-        swap(currentStep[0], currentStep[1])
         console.log(currentStep)
+        removeCompare()
+        if(currentStep[0] == 0) {
+            swap(currentStep[1], currentStep[2])
+        }
+        else if(currentStep[0] == 1) {
+            compare(currentStep[1], currentStep[2])
+        }
     }
 });
+
+let removeCompare = () => {
+    if(compared.length>0) {
+        document.querySelector("[location='"+compared[0][0]+"']").style.backgroundColor = compared[0][1]
+        document.querySelector("[location='"+compared[1][0]+"']").style.backgroundColor = compared[1][1]
+        compared = []
+    }
+}
+
+let compare = (targetA, targetB) => {
+    let a = document.querySelector("[location='"+targetA+"']")
+    let b = document.querySelector("[location='"+targetB+"']")
+
+    compared.push([targetA, a.style.backgroundColor])
+    compared.push([targetB, b.style.backgroundColor])
+
+    a.style.backgroundColor = "red";
+    b.style.backgroundColor = "red";
+}
 
 let removeDivs = () => {
     let i=0;
