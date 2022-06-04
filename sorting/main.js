@@ -2,7 +2,11 @@ document.body.onload = addElements;
 
 const update = document.querySelector("#update")
 const sort = document.querySelector("#sort")
+const step = document.querySelector("#step")
+
 let values = []
+let steps = []
+let sorted = false
 
 update.addEventListener("click", function () {
     let rawValues = document.querySelector("#input").value
@@ -12,6 +16,7 @@ update.addEventListener("click", function () {
     values.forEach(element => {
         addElement(element, (element*10)+"px", i++)
     });
+    sorted = false
 });
 
 sort.addEventListener("click", function () {
@@ -30,11 +35,23 @@ sort.addEventListener("click", function () {
                 min = j;
             }
         }
-        swap(i, min)
-        console.log("SWAP "+i+" with "+min)
+        // swap(i, min)
+        steps.push([i, min])
         let temp = values[i]
         values[i] = values[min]
         values[min] = temp
+    }
+    sorted = true
+});
+
+step.addEventListener("click", function () {
+    if (!sorted) {
+        console.log("Not Sorted")
+    }
+    if(steps.length>0) {
+        let currentStep = steps.shift()
+        swap(currentStep[0], currentStep[1])
+        console.log(currentStep)
     }
 });
 
@@ -66,26 +83,24 @@ function addElement(value, height, index) {
 
 function addElements() {
     let i=0;
-    values = [6, 3, 4, 5]
-    addElement(6, "60px", i++);
-    addElement(3, "30px", i++);
-    addElement(4, "40px", i++);
-    addElement(5, "50px", i++);
+    values = [6, 4, 3, 5, 1, 2]
+    values.forEach(element => {
+        addElement(element, (element*10)+"px", i++)
+    });
 }
 
 function swap(targetA, targetB) {
     let a = document.querySelector("[location='"+targetA+"']").getAttribute("index")
     let b = document.querySelector("[location='"+targetB+"']").getAttribute("index")
-    console.log("ACTUALSWAP "+a+" with "+b)
     move(a, targetB)
     move(b, targetA)
 }
 
-function move(targetName, targetLoc) {
-    document.querySelector("[index='"+targetName+"']").setAttribute("location", targetLoc)
+function move(targetInd, targetLoc) {
+    document.querySelector("[index='"+targetInd+"']").setAttribute("location", targetLoc)
     anime({
-        targets: "[index='"+targetName+"']",
-        translateX: 12*targetLoc - 12*document.querySelector("[index='"+targetName+"']").getAttribute("index"),
+        targets: "[index='"+targetInd+"']",
+        translateX: 12*targetLoc - 12*document.querySelector("[index='"+targetInd+"']").getAttribute("index"),
         delay: 100,
     });
 }
