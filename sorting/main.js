@@ -1,8 +1,7 @@
 document.body.onload = addElements;
 
 const update = document.querySelector("#update")
-const sort = document.querySelector("#sort")
-const step = document.querySelector("#step")
+const next = document.querySelector("#next")
 
 let values = []
 let steps = []
@@ -17,6 +16,8 @@ let compared = []
 
 update.addEventListener("click", function () {
     let rawValues = document.querySelector("#input").value
+    if (rawValues == "")
+        return
     values = rawValues.split(",").map(Number);
     removeDivs()
     let i=0;
@@ -26,14 +27,7 @@ update.addEventListener("click", function () {
     sorted = false
 });
 
-sort.addEventListener("click", function () {
-    // console.log(values)
-    // for (let index = 0; index < values.length; index++) {
-    //     if(index<4)
-    //         swap(index, index+1)
-    //     else
-    //         swap(index, index-1)
-    // }
+let sort = () => {
     let min;
     for (let i=0; i<values.length; i++) {
         min = i;
@@ -50,15 +44,15 @@ sort.addEventListener("click", function () {
         values[min] = temp
     }
     sorted = true
-});
+}
 
-step.addEventListener("click", function () {
+next.addEventListener("click", function () {
     if (!sorted) {
-        console.log("Not Sorted")
+        sort()
     }
     if(steps.length>0) {
         let currentStep = steps.shift()
-        console.log(currentStep)
+        // console.log(currentStep)
         removeCompare()
         if(currentStep[0] == 0) {
             swap(currentStep[1], currentStep[2])
@@ -73,6 +67,16 @@ let removeCompare = () => {
     if(compared.length>0) {
         document.querySelector("[location='"+compared[0][0]+"']").style.backgroundColor = compared[0][1]
         document.querySelector("[location='"+compared[1][0]+"']").style.backgroundColor = compared[1][1]
+        // anime({
+        //     targets: "[location='"+compared[0][0]+"']",
+        //     backgroundColor: compared[0][1],
+        //     delay: 0
+        // });
+        // anime({
+        //     targets: "[location='"+compared[1][0]+"']",
+        //     backgroundColor: compared[1][1],
+        //     delay: 0
+        // });
         compared = []
     }
 }
@@ -86,6 +90,17 @@ let compare = (targetA, targetB) => {
 
     a.style.backgroundColor = "red";
     b.style.backgroundColor = "red";
+    // anime({
+    //     targets: "[location='"+targetA+"']",
+    //     backgroundColor: '#FF0000',
+    //     delay: 0
+    // });
+    // anime({
+    //     targets: "[location='"+targetB+"']",
+    //     backgroundColor: '#FF0000',
+    //     delay: 0
+    // });
+    // console.log("finished")
 }
 
 let removeDivs = () => {
@@ -99,7 +114,7 @@ let removeDivs = () => {
 
 function getRandomArbitrary(min, max) {
     return Math.random() * (max - min) + min;
-  }
+}
 
 function addElement(value, height, index) {
     var newDiv = document.createElement("div");
@@ -134,6 +149,12 @@ function move(targetInd, targetLoc) {
     anime({
         targets: "[index='"+targetInd+"']",
         translateX: 12*targetLoc - 12*document.querySelector("[index='"+targetInd+"']").getAttribute("index"),
-        delay: 100,
+        endDelay: 0,
+        delay: 0,
+        duration: 100,
+        easing: 'easeInOutQuad',
+        complete: function(anim) {
+            console.log('completed : ' + anim.completed);
+        }
     });
 }

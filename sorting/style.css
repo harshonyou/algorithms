@@ -21,3 +21,70 @@
 #yellow {
     background-color: yellow;
 }
+
+.arrow {
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    border-top: 2px solid #000;
+    border-right: 2px solid #000;
+}
+
+.arrow-top {
+    transform: rotate(-45deg);
+}
+
+ul {
+    margin: 1.5em 2em 1em;
+    text-align: center;
+    list-style: none;
+}
+ul + ul {
+    margin-top: -1em;
+}
+ul li {
+    display: inline-block;
+    margin: 40px;
+}
+
+
+/* Color Picker */
+
+@import url(https://fonts.googleapis.com/css?family=Open+Sans);
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #e6e6e6;
+}
+h2 {
+  background-color: #dbdbdb;
+  margin: 0;
+  margin-bottom: 15px;
+  padding: 10px;
+  font-family: 'Open Sans';
+}
+#color-input {
+  display: none;
+}
+#color-label {
+  margin-left: 15px;
+  position: absolute;
+  height: 30px;
+  width: 50px;
+}
+#color-input:checked ~ #color-picker {
+  opacity: 1;
+}
+#color-picker {
+  position: absolute;
+  left: 70px;
+  background-color: white;
+  height: 150px;
+  width: 185px;
+  border: solid 1px #ccc;
+  opacity: 0;
+  padding: 5px;
+}
+canvas:hover {
+  cursor: crosshair;
+}

@@ -12,7 +12,7 @@ for (let i=0; i<x.length; i++) {
             min = j;
         }
     }
-    temp = x[i]
+    let temp = x[i]
     x[i] = x[min]
     x[min] = temp
 }
