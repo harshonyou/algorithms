@@ -1,15 +1,18 @@
 document.body.onload = addElements;
 
 const update = document.querySelector("#update")
+const prev = document.querySelector("#prev")
 const next = document.querySelector("#next")
 
 let values = []
 let steps = []
+let history = []
 let sorted = false
 let compared = []
 /*
     OPCODE  |   OPRAND
     __________________
+    -1       |   CLEAR
     0       |   SWAP
     1       |   COMPARE
 */
@@ -29,6 +32,7 @@ update.addEventListener("click", function () {
 
 let sort = () => {
     let min;
+    // steps.push([-1, -1, -1])
     for (let i=0; i<values.length; i++) {
         min = i;
         for (let j=i+1; j<values.length; j++) {
@@ -44,16 +48,40 @@ let sort = () => {
         values[min] = temp
     }
     sorted = true
+    steps.reverse()
 }
+
+prev.addEventListener("click", function () {
+    if (!sorted) {
+        sort()
+    }
+    if(history.length>0) {
+        let currentStep = history.pop()
+        steps.push(currentStep)
+        removeCompare()
+        if(currentStep[0] == -1) {
+            return
+        }
+        if(currentStep[0] == 0) {
+            swap(currentStep[1], currentStep[2])
+        }
+        else if(currentStep[0] == 1) {
+            compare(currentStep[1], currentStep[2])
+        }
+    }
+});
 
 next.addEventListener("click", function () {
     if (!sorted) {
         sort()
     }
     if(steps.length>0) {
-        let currentStep = steps.shift()
-        // console.log(currentStep)
+        let currentStep = steps.pop()
+        history.push(currentStep)
         removeCompare()
+        if(currentStep[0] == -1) {
+            return
+        }
         if(currentStep[0] == 0) {
             swap(currentStep[1], currentStep[2])
         }
