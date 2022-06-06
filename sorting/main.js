@@ -10,6 +10,7 @@ let history = []
 let sorted = false
 let reverse = false
 let compared = []
+
 /*
     OPCODE  |   OPRAND
     __________________
@@ -17,8 +18,23 @@ let compared = []
     0       |   SWAP
     1       |   COMPARE
 */
+const CLEAR_OP = -1
+const SWAP_OP = 0
+const COMPARE_OP = 1
 
 update.addEventListener("click", function () {
+    updateStage();
+});
+
+next.addEventListener("click", function () {
+    nextStage();
+});
+
+prev.addEventListener("click", function () {
+    previousStage();
+});
+
+let updateStage = () => {
     let rawValues = document.querySelector("#input").value
     if (rawValues == "")
         return
@@ -29,11 +45,10 @@ update.addEventListener("click", function () {
         addElement(element, (element*10)+"px", i++)
     });
     sorted = false
-});
+}
 
 let sort = () => {
     let min;
-    // history.push([-1, -1, -1])
     for (let i=0; i<values.length; i++) {
         min = i;
         for (let j=i+1; j<values.length; j++) {
@@ -42,7 +57,6 @@ let sort = () => {
                 min = j;
             }
         }
-        // swap(i, min)
         steps.push([0, i, min])
         let temp = values[i]
         values[i] = values[min]
@@ -52,76 +66,60 @@ let sort = () => {
     steps.reverse()
 }
 
-prev.addEventListener("click", function () {
+let nextStage = () => {
     if (!sorted) {
         sort()
     }
-    if(history.length>0) {
-        // console.log(history)
-        let currentStep = history.pop()
-        steps.push(currentStep)
 
-        if(!reverse && currentStep[0] != 0) {
-            currentStep = history.pop()
-            steps.push(currentStep)
-            console.log("bruh")
-        }
-        removeCompare()
-        reverse = true
-        if(currentStep[0] == -1) {
-            return
-        }
-        if(currentStep[0] == 0) {
-            swap(currentStep[1], currentStep[2])
-        }
-        else if(currentStep[0] == 1) {
-            compare(currentStep[1], currentStep[2])
-        }
-    }
-});
-
-next.addEventListener("click", function () {
-    if (!sorted) {
-        sort()
-    }
     if(steps.length>0) {
-        // console.log(steps)
-
         let currentStep = steps.pop()
         history.push(currentStep)
-
-        if(reverse) {
+        if(reverse && currentStep[0] != SWAP_OP) {
             currentStep = steps.pop()
             history.push(currentStep)
         }
         removeCompare()
-        reverse = false
-        if(currentStep[0] == -1) {
-            return
-        }
-        if(currentStep[0] == 0) {
+
+        if(currentStep[0] == SWAP_OP) {
             swap(currentStep[1], currentStep[2])
         }
-        else if(currentStep[0] == 1) {
+        else if(currentStep[0] == COMPARE_OP) {
+
             compare(currentStep[1], currentStep[2])
         }
+        reverse = false
     }
-});
+}
+
+let previousStage = () => {
+    if (!sorted) {
+        sort()
+    }
+
+    if(history.length>0) {
+        let currentStep = history.pop()
+        steps.push(currentStep)
+        if(!reverse && history.length>0 && currentStep[0] != SWAP_OP) {
+            currentStep = history.pop()
+            steps.push(currentStep)
+        }
+        removeCompare()
+
+        if(currentStep[0] == SWAP_OP) {
+            swap(currentStep[1], currentStep[2])
+        }
+        else if(currentStep[0] == COMPARE_OP) {
+            compare(currentStep[1], currentStep[2])
+        }
+        reverse = true
+    }
+}
 
 let removeCompare = () => {
     if(compared.length>0) {
         document.querySelector("[location='"+compared[0][0]+"']").style.backgroundColor = compared[0][1]
         document.querySelector("[location='"+compared[1][0]+"']").style.backgroundColor = compared[1][1]
-        // anime({
-        //     targets: "[location='"+compared[0][0]+"']",
-        //     backgroundColor: compared[0][1],
-        //     delay: 0
-        // });
-        // anime({
-        //     targets: "[location='"+compared[1][0]+"']",
-        //     backgroundColor: compared[1][1],
-        //     delay: 0
-        // });
+
         compared = []
     }
 }
@@ -135,17 +133,6 @@ let compare = (targetA, targetB) => {
 
     a.style.backgroundColor = "red";
     b.style.backgroundColor = "red";
-    // anime({
-    //     targets: "[location='"+targetA+"']",
-    //     backgroundColor: '#FF0000',
-    //     delay: 0
-    // });
-    // anime({
-    //     targets: "[location='"+targetB+"']",
-    //     backgroundColor: '#FF0000',
-    //     delay: 0
-    // });
-    // console.log("finished")
 }
 
 let removeDivs = () => {
@@ -165,6 +152,8 @@ function addElement(value, height, index) {
     var newDiv = document.createElement("div");
     newDiv.setAttribute("class", "element")
     newDiv.setAttribute("value", value)
+    newDiv.setAttribute("tooltip", "value: " + value+"; " + "index: " + index)
+    newDiv.setAttribute("flow", "down")
     newDiv.setAttribute("index", index)
     newDiv.setAttribute("location", index)
     newDiv.style.height = height
@@ -178,7 +167,7 @@ function addElements() {
     let i=0;
     values = [6, 4, 3, 5, 1, 2]
     values.forEach(element => {
-        addElement(element, (element*10)+"px", i++)
+        addElement(element, (element*60)+"px", i++)
     });
 }
 
@@ -190,16 +179,15 @@ function swap(targetA, targetB) {
 }
 
 function move(targetInd, targetLoc) {
-    document.querySelector("[index='"+targetInd+"']").setAttribute("location", targetLoc)
+    let target = document.querySelector("[index='"+targetInd+"']")
+    target.setAttribute("location", targetLoc)
+    target.setAttribute("tooltip", "value: " + target.getAttribute("value") + "; " + "index: " + targetLoc)
     anime({
         targets: "[index='"+targetInd+"']",
-        translateX: 12*targetLoc - 12*document.querySelector("[index='"+targetInd+"']").getAttribute("index"),
+        translateX: 12*targetLoc - 12*target.getAttribute("index"),
         endDelay: 0,
         delay: 0,
         duration: 100,
-        easing: 'easeInOutQuad',
-        complete: function(anim) {
-            console.log('completed : ' + anim.completed);
-        }
+        easing: 'easeInOutQuad'
     });
 }
