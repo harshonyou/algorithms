@@ -21,6 +21,7 @@ let compared = []
 const CLEAR_OP = -1
 const SWAP_OP = 0
 const COMPARE_OP = 1
+const SPACES = 32
 
 update.addEventListener("click", function () {
     updateStage();
@@ -184,7 +185,7 @@ function move(targetInd, targetLoc) {
     target.setAttribute("tooltip", "value: " + target.getAttribute("value") + "; " + "index: " + targetLoc)
     anime({
         targets: "[index='"+targetInd+"']",
-        translateX: 12*targetLoc - 12*target.getAttribute("index"),
+        translateX: SPACES*(targetLoc - target.getAttribute("index")),
         endDelay: 0,
         delay: 0,
         duration: 100,
