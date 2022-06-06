@@ -8,6 +8,7 @@ let values = []
 let steps = []
 let history = []
 let sorted = false
+let reverse = false
 let compared = []
 /*
     OPCODE  |   OPRAND
@@ -32,7 +33,7 @@ update.addEventListener("click", function () {
 
 let sort = () => {
     let min;
-    // steps.push([-1, -1, -1])
+    // history.push([-1, -1, -1])
     for (let i=0; i<values.length; i++) {
         min = i;
         for (let j=i+1; j<values.length; j++) {
@@ -56,9 +57,17 @@ prev.addEventListener("click", function () {
         sort()
     }
     if(history.length>0) {
+        // console.log(history)
         let currentStep = history.pop()
         steps.push(currentStep)
+
+        if(!reverse && currentStep[0] != 0) {
+            currentStep = history.pop()
+            steps.push(currentStep)
+            console.log("bruh")
+        }
         removeCompare()
+        reverse = true
         if(currentStep[0] == -1) {
             return
         }
@@ -76,9 +85,17 @@ next.addEventListener("click", function () {
         sort()
     }
     if(steps.length>0) {
+        // console.log(steps)
+
         let currentStep = steps.pop()
         history.push(currentStep)
+
+        if(reverse) {
+            currentStep = steps.pop()
+            history.push(currentStep)
+        }
         removeCompare()
+        reverse = false
         if(currentStep[0] == -1) {
             return
         }
