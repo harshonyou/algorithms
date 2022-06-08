@@ -208,7 +208,7 @@ function move(targetInd, targetLoc) {
     target.setAttribute("location", targetLoc)
     target.setAttribute("tooltip", "value: " + target.getAttribute("value") + "; " + "index: " + targetLoc)
     anime({
-        targets: "[index='"+targetInd+"']",
+        targets: document.querySelector("div[index='"+targetInd+"']").parentElement,
         translateX: SPACES*(targetLoc - target.getAttribute("index")),
         endDelay: 0,
         delay: 0,
