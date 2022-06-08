@@ -10,6 +10,7 @@ let history = []
 let sorted = false
 let reverse = false
 let compared = []
+let spaces = 32
 
 /*
     OPCODE  |   OPRAND
@@ -21,12 +22,17 @@ let compared = []
 const CLEAR_OP = -1
 const SWAP_OP = 0
 const COMPARE_OP = 1
-const SPACES = 32
 
 // addElements()
 
 update.addEventListener("click", function () {
     updateStage();
+    if(values.length>1) {
+        spaces = getXDistanceBetweenElements(
+            document.querySelector("[location='"+0+"']"),
+            document.querySelector("[location='"+1+"']")
+        );
+    }
 });
 
 next.addEventListener("click", function () {
@@ -36,6 +42,37 @@ next.addEventListener("click", function () {
 prev.addEventListener("click", function () {
     previousStage();
 });
+
+window.addEventListener('resize', () => {
+    if(values.length>1) {
+        spaces = getXDistanceBetweenElements(
+            document.querySelector("[location='"+0+"']"),
+            document.querySelector("[location='"+1+"']")
+        );
+    }
+});
+
+function getPositionAtCenter(element) {
+    const {top, left, width, height} = element.getBoundingClientRect();
+    return {
+        x: left + width / 2,
+        y: top + height / 2
+    };
+}
+
+function getXDistanceBetweenElements(a, b) {
+    const aPosition = getPositionAtCenter(a);
+    const bPosition = getPositionAtCenter(b);
+
+    return Math.abs(aPosition.x - bPosition.x);
+}
+
+function getDistanceBetweenElements(a, b) {
+    const aPosition = getPositionAtCenter(a);
+    const bPosition = getPositionAtCenter(b);
+
+    return Math.hypot(aPosition.x - bPosition.x, aPosition.y - bPosition.y);
+}
 
 let print = () => {
     // if(colorVisibility.style.opacity == '') {
@@ -216,7 +253,7 @@ function move(targetInd, targetLoc) {
     target.setAttribute("tooltip", "value: " + target.getAttribute("value") + "; " + "index: " + targetLoc)
     anime({
         targets: document.querySelector("div[index='"+targetInd+"']").parentElement,
-        translateX: SPACES*(targetLoc - target.getAttribute("index")),
+        translateX: spaces*(targetLoc - target.getAttribute("index")),
         endDelay: 0,
         delay: 0,
         duration: 100,
