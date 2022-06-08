@@ -23,6 +23,8 @@ const SWAP_OP = 0
 const COMPARE_OP = 1
 const SPACES = 32
 
+// addElements()
+
 update.addEventListener("click", function () {
     updateStage();
 });
@@ -35,7 +37,22 @@ prev.addEventListener("click", function () {
     previousStage();
 });
 
+let print = () => {
+    // if(colorVisibility.style.opacity == '') {
+    //     colorVisibility.style.opacity = '1'
+    // } else {
+    //     colorVisibility.style.opacity = ''
+    // }
+    console.log("Bruh")
+}
+
 let updateStage = () => {
+    let tableElements = document.querySelectorAll(".element");
+
+    tableElements.forEach(function(element) {
+        element.removeEventListener("click", print);
+    });
+
     let rawValues = document.querySelector("#input").value
     if (rawValues == "")
         return
@@ -43,26 +60,38 @@ let updateStage = () => {
     removeDivs()
     let i=0;
     values.forEach(element => {
-        addElement(element, (element*10)+"px", i++)
+        addElement(element, (element*60)+"px", i++)
     });
     sorted = false
+
+    tableElements = document.querySelectorAll(".element");
+
+    tableElements.forEach(function(element) {
+        element.addEventListener("click", print);
+    });
 }
 
+// let sort = () => {
+//     let min;
+//     for (let i=0; i<values.length; i++) {
+//         min = i;
+//         for (let j=i+1; j<values.length; j++) {
+//             steps.push([1, j, min])
+//             if(values[j]<values[min]) {
+//                 min = j;
+//             }
+//         }
+//         steps.push([0, i, min])
+//         let temp = values[i]
+//         values[i] = values[min]
+//         values[min] = temp
+//     }
+//     sorted = true
+//     steps.reverse()
+// }
+
 let sort = () => {
-    let min;
-    for (let i=0; i<values.length; i++) {
-        min = i;
-        for (let j=i+1; j<values.length; j++) {
-            steps.push([1, j, min])
-            if(values[j]<values[min]) {
-                min = j;
-            }
-        }
-        steps.push([0, i, min])
-        let temp = values[i]
-        values[i] = values[min]
-        values[min] = temp
-    }
+    bubble(values, steps)
     sorted = true
     steps.reverse()
 }
@@ -151,24 +180,25 @@ function getRandomArbitrary(min, max) {
 
 function addElement(value, height, index) {
     var newDiv = document.createElement("div");
-    newDiv.setAttribute("class", "element")
+    newDiv.setAttribute("class", "element coloris")
     newDiv.setAttribute("value", value)
     newDiv.setAttribute("tooltip", "value: " + value+"; " + "index: " + index)
     newDiv.setAttribute("flow", "down")
     newDiv.setAttribute("index", index)
     newDiv.setAttribute("location", index)
+    newDiv.setAttribute("coloris-value", "rgb("+getRandomArbitrary(0,255)+", "+getRandomArbitrary(0,255)+", "+getRandomArbitrary(0,255)+")")
     newDiv.style.height = height
-    newDiv.style.backgroundColor = "rgb("+getRandomArbitrary(0,255)+", "+getRandomArbitrary(0,255)+", "+getRandomArbitrary(0,255)+")"
 
     var currentDiv = document.getElementById("elements");
     currentDiv.append(newDiv)
 }
 
 function addElements() {
-    let i=0;
-    values = [6, 4, 3, 5, 1, 2]
-    values.forEach(element => {
-        addElement(element, (element*60)+"px", i++)
+    document.querySelector("#input").value = "6, 4, 3, 5, 1, 2"
+    updateStage()
+
+    Coloris({
+        el: '.coloris'
     });
 }
 
@@ -184,7 +214,7 @@ function move(targetInd, targetLoc) {
     target.setAttribute("location", targetLoc)
     target.setAttribute("tooltip", "value: " + target.getAttribute("value") + "; " + "index: " + targetLoc)
     anime({
-        targets: "[index='"+targetInd+"']",
+        targets: document.querySelector("div[index='"+targetInd+"']").parentElement,
         translateX: SPACES*(targetLoc - target.getAttribute("index")),
         endDelay: 0,
         delay: 0,
@@ -192,94 +222,3 @@ function move(targetInd, targetLoc) {
         easing: 'easeInOutQuad'
     });
 }
-
-
-
-
-/////////////////////////////////////////////////////
-
-var colorBlock = document.getElementById('color-block');
-var ctx1 = colorBlock.getContext('2d');
-var width1 = colorBlock.width;
-var height1 = colorBlock.height;
-
-var colorStrip = document.getElementById('color-strip');
-var ctx2 = colorStrip.getContext('2d');
-var width2 = colorStrip.width;
-var height2 = colorStrip.height;
-
-var colorLabel = document.getElementById('color-label');
-
-var x = 0;
-var y = 0;
-var drag = false;
-var rgbaColor = 'rgba(255,0,0,1)';
-
-ctx1.rect(0, 0, width1, height1);
-fillGradient();
-
-ctx2.rect(0, 0, width2, height2);
-var grd1 = ctx2.createLinearGradient(0, 0, 0, height1);
-grd1.addColorStop(0, 'rgba(255, 0, 0, 1)');
-grd1.addColorStop(0.17, 'rgba(255, 255, 0, 1)');
-grd1.addColorStop(0.34, 'rgba(0, 255, 0, 1)');
-grd1.addColorStop(0.51, 'rgba(0, 255, 255, 1)');
-grd1.addColorStop(0.68, 'rgba(0, 0, 255, 1)');
-grd1.addColorStop(0.85, 'rgba(255, 0, 255, 1)');
-grd1.addColorStop(1, 'rgba(255, 0, 0, 1)');
-ctx2.fillStyle = grd1;
-ctx2.fill();
-
-function click(e) {
-  x = e.offsetX;
-  y = e.offsetY;
-  var imageData = ctx2.getImageData(x, y, 1, 1).data;
-  rgbaColor = 'rgba(' + imageData[0] + ',' + imageData[1] + ',' + imageData[2] + ',1)';
-  fillGradient();
-}
-
-function fillGradient() {
-  ctx1.fillStyle = rgbaColor;
-  ctx1.fillRect(0, 0, width1, height1);
-
-  var grdWhite = ctx2.createLinearGradient(0, 0, width1, 0);
-  grdWhite.addColorStop(0, 'rgba(255,255,255,1)');
-  grdWhite.addColorStop(1, 'rgba(255,255,255,0)');
-  ctx1.fillStyle = grdWhite;
-  ctx1.fillRect(0, 0, width1, height1);
-
-  var grdBlack = ctx2.createLinearGradient(0, 0, 0, height1);
-  grdBlack.addColorStop(0, 'rgba(0,0,0,0)');
-  grdBlack.addColorStop(1, 'rgba(0,0,0,1)');
-  ctx1.fillStyle = grdBlack;
-  ctx1.fillRect(0, 0, width1, height1);
-}
-
-function mousedown(e) {
-  drag = true;
-  changeColor(e);
-}
-
-function mousemove(e) {
-  if (drag) {
-    changeColor(e);
-  }
-}
-
-function mouseup(e) {
-  drag = false;
-}
-
-function changeColor(e) {
-  x = e.offsetX;
-  y = e.offsetY;
-  var imageData = ctx1.getImageData(x, y, 1, 1).data;
-  rgbaColor = 'rgba(' + imageData[0] + ',' + imageData[1] + ',' + imageData[2] + ',1)';
-  colorLabel.style.backgroundColor = rgbaColor;
-}
-
-colorStrip.addEventListener("click", click, false);
-
-colorBlock.addEventListener("mousedown", mousedown, false);
-colorBlock.addEventListener("mouseup", mouseup, false);
-colorBlock.addEventListener("mousemove", mousemove, false);
