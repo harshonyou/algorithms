@@ -71,21 +71,27 @@ let updateStage = () => {
     });
 }
 
+// let sort = () => {
+//     let min;
+//     for (let i=0; i<values.length; i++) {
+//         min = i;
+//         for (let j=i+1; j<values.length; j++) {
+//             steps.push([1, j, min])
+//             if(values[j]<values[min]) {
+//                 min = j;
+//             }
+//         }
+//         steps.push([0, i, min])
+//         let temp = values[i]
+//         values[i] = values[min]
+//         values[min] = temp
+//     }
+//     sorted = true
+//     steps.reverse()
+// }
+
 let sort = () => {
-    let min;
-    for (let i=0; i<values.length; i++) {
-        min = i;
-        for (let j=i+1; j<values.length; j++) {
-            steps.push([1, j, min])
-            if(values[j]<values[min]) {
-                min = j;
-            }
-        }
-        steps.push([0, i, min])
-        let temp = values[i]
-        values[i] = values[min]
-        values[min] = temp
-    }
+    bubble(values, steps)
     sorted = true
     steps.reverse()
 }

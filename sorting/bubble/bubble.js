@@ -3,12 +3,16 @@ let y = x;
 
 console.log(x)
 
-for (let i=0; i<x.length; i++) {
-    for (let j=0; j<x.length-i-1; j++) {
-        if(x[j] > x[j+1]) {
-            let temp = x[j]
-            x[j] = x[j+1]
-            x[j+1] = temp
+let bubble = (arr, steps) => {
+    for (let i=0; i<arr.length; i++) {
+        for (let j=0; j<arr.length-i-1; j++) {
+            steps.push([1, j, j+1])
+            if(arr[j] > arr[j+1]) {
+                steps.push([0, j, j+1])
+                let temp = arr[j]
+                arr[j] = arr[j+1]
+                arr[j+1] = temp
+            }
         }
     }
 }
