@@ -2,10 +2,10 @@ nav {
     position: fixed;
     width: 100%;
     display: flex;
-    justify-content: space-around;
+    justify-content: flex-start;
     align-items: center;
-    min-height: 8vh;
-    background-color: #5D4954;
+    min-height: 5vh;
+    background-color: #363636;
     font-family: "Poppins", sans-serif;
 }
 
@@ -19,7 +19,15 @@ nav {
 .nav-links {
     display: flex;
     justify-content: space-around;
-    width: 30%;
+
+}
+
+.nav-links input:hover {
+    cursor: auto;
+}
+
+.nav-links input {
+    margin-right: 2px;
 }
 
 .nav-links li {
@@ -54,6 +62,7 @@ nav {
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
+  margin-left: 10px;
 }
 
 .button-38:hover {
