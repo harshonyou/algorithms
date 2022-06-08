@@ -47,6 +47,7 @@ let print = () => {
 }
 
 let updateStage = () => {
+    console.log("bruh")
     let tableElements = document.querySelectorAll(".element");
 
     tableElements.forEach(function(element) {
@@ -69,32 +70,36 @@ let updateStage = () => {
     tableElements.forEach(function(element) {
         element.addEventListener("click", print);
     });
+
+    Coloris({
+        el: '.coloris'
+    });
 }
 
-// let sort = () => {
-//     let min;
-//     for (let i=0; i<values.length; i++) {
-//         min = i;
-//         for (let j=i+1; j<values.length; j++) {
-//             steps.push([1, j, min])
-//             if(values[j]<values[min]) {
-//                 min = j;
-//             }
-//         }
-//         steps.push([0, i, min])
-//         let temp = values[i]
-//         values[i] = values[min]
-//         values[min] = temp
-//     }
-//     sorted = true
-//     steps.reverse()
-// }
-
 let sort = () => {
-    bubble(values, steps)
+    let min;
+    for (let i=0; i<values.length; i++) {
+        min = i;
+        for (let j=i+1; j<values.length; j++) {
+            steps.push([1, j, min])
+            if(values[j]<values[min]) {
+                min = j;
+            }
+        }
+        steps.push([0, i, min])
+        let temp = values[i]
+        values[i] = values[min]
+        values[min] = temp
+    }
     sorted = true
     steps.reverse()
 }
+
+// let sort = () => {
+//     bubble(values, steps)
+//     sorted = true
+//     steps.reverse()
+// }
 
 let nextStage = () => {
     if (!sorted) {
@@ -167,10 +172,10 @@ let compare = (targetA, targetB) => {
 
 let removeDivs = () => {
     let i=0;
-    let tempDivSelector = document.querySelector("[index='"+(i++)+"']")
+    let tempDivSelector = document.querySelector("div[index='"+(i++)+"']")
     while(tempDivSelector != null) {
-        tempDivSelector.remove()
-        tempDivSelector = document.querySelector("[index='"+(i++)+"']")
+        tempDivSelector.parentElement.remove()
+        tempDivSelector = document.querySelector("div[index='"+(i++)+"']")
     }
 }
 
@@ -196,10 +201,6 @@ function addElement(value, height, index) {
 function addElements() {
     document.querySelector("#input").value = "6, 4, 3, 5, 1, 2"
     updateStage()
-
-    Coloris({
-        el: '.coloris'
-    });
 }
 
 function swap(targetA, targetB) {
