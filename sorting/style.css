@@ -6,52 +6,19 @@
 }
 
 .element {
-    position: relative;
-    width: 30px;
-    height: 100px;
-    margin: 1px;
-    display: inline-block;
+  position: relative;
+  width: 30px;
+  height: 100px;
+  margin: 0px;
+  display: inline-block;
 }
 
-#red {
-    background-color: red;
+.element:hover {
+  cursor: crosshair;
 }
 
-#blue {
-    background-color: blue;
-}
-
-#green {
-    background-color: green;
-}
-
-#yellow {
-    background-color: yellow;
-}
-
-.arrow {
-    display: inline-block;
-    width: 5px;
-    height: 5px;
-    border-top: 2px solid #000;
-    border-right: 2px solid #000;
-}
-
-.arrow-top {
-    transform: rotate(-45deg);
-}
-
-ul {
-    margin: 1.5em 2em 1em;
-    text-align: center;
-    list-style: none;
-}
-ul + ul {
-    margin-top: -1em;
-}
-ul li {
-    display: inline-block;
-    margin: 40px;
+.clr-field {
+  margin: 10px 1px 1px 1px;
 }
 
 /* Color Picker */
@@ -61,44 +28,6 @@ body {
   background-color: #e6e6e6;
 }
 
-#color-input {
-  display: none;
-}
-/* #color-label {
-  margin-left: 15px;
-  position: absolute;
-  height: 30px;
-  width: 50px;
-} */
-.color-label {
-  position: relative;
-  width: 30px;
-  height: 100px;
-  margin: 1px;
-  display: inline-block;
-}
-/* .element {
-  position: relative;
-  width: 30px;
-  height: 100px;
-  margin: 1px;
-  display: inline-block;
-} */
-/* #color-input:checked ~ #color-picker {
-  opacity: 1;
-} */
-#color-picker {
-  position: absolute;
-  left: 70px;
-  background-color: white;
-  height: 150px;
-  width: 185px;
-  border: solid 1px #ccc;
-  opacity: 0;
-  padding: 5px;
-}
-canvas:hover {
-  cursor: crosshair;
-}
+
 
 
