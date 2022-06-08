@@ -99,7 +99,7 @@ let sort = () => {
             bubble(values, steps)
             break;
         case "selection":
-            bubble(values, steps)
+            selection(values, steps)
             break;
         default:
             break;
