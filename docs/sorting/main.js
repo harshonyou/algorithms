@@ -1,15 +1,20 @@
+// Add default values on page load
 document.body.onload = addElements;
 
+// buttons
 const update = document.querySelector("#update")
 const prev = document.querySelector("#prev")
 const next = document.querySelector("#next")
+const algo = document.querySelector("#algo")
 
+// variables
 let values = []
 let steps = []
 let history = []
 let sorted = false
 let reverse = false
 let compared = []
+let spaces = 32
 
 /*
     OPCODE  |   OPRAND
@@ -18,15 +23,20 @@ let compared = []
     0       |   SWAP
     1       |   COMPARE
 */
+// constants
 const CLEAR_OP = -1
 const SWAP_OP = 0
 const COMPARE_OP = 1
-const SPACES = 32
 
-// addElements()
-
+// event handlers for different button
 update.addEventListener("click", function () {
     updateStage();
+    if(values.length>1) {
+        spaces = getXDistanceBetweenElements(
+            document.querySelector("[location='"+0+"']"),
+            document.querySelector("[location='"+1+"']")
+        );
+    }
 });
 
 next.addEventListener("click", function () {
@@ -37,17 +47,20 @@ prev.addEventListener("click", function () {
     previousStage();
 });
 
-let print = () => {
-    // if(colorVisibility.style.opacity == '') {
-    //     colorVisibility.style.opacity = '1'
-    // } else {
-    //     colorVisibility.style.opacity = ''
-    // }
-    console.log("Bruh")
-}
+algo.addEventListener("change", function () {
+    updateStage();
+});
+
+window.addEventListener('resize', () => {
+    if(values.length>1) {
+        spaces = getXDistanceBetweenElements(
+            document.querySelector("[location='"+0+"']"),
+            document.querySelector("[location='"+1+"']")
+        );
+    }
+});
 
 let updateStage = () => {
-    console.log("bruh")
     let tableElements = document.querySelectorAll(".element");
 
     tableElements.forEach(function(element) {
@@ -63,6 +76,9 @@ let updateStage = () => {
     values.forEach(element => {
         addElement(element, (element*60)+"px", i++)
     });
+
+    steps = []
+    history = []
     sorted = false
 
     tableElements = document.querySelectorAll(".element");
@@ -77,29 +93,20 @@ let updateStage = () => {
 }
 
 let sort = () => {
-    let min;
-    for (let i=0; i<values.length; i++) {
-        min = i;
-        for (let j=i+1; j<values.length; j++) {
-            steps.push([1, j, min])
-            if(values[j]<values[min]) {
-                min = j;
-            }
-        }
-        steps.push([0, i, min])
-        let temp = values[i]
-        values[i] = values[min]
-        values[min] = temp
+    console.log(algo.value)
+    switch (algo.value) {
+        case "bubble":
+            bubble(values, steps)
+            break;
+        case "selection":
+            selection(values, steps)
+            break;
+        default:
+            break;
     }
     sorted = true
     steps.reverse()
 }
-
-// let sort = () => {
-//     bubble(values, steps)
-//     sorted = true
-//     steps.reverse()
-// }
 
 let nextStage = () => {
     if (!sorted) {
@@ -216,10 +223,33 @@ function move(targetInd, targetLoc) {
     target.setAttribute("tooltip", "value: " + target.getAttribute("value") + "; " + "index: " + targetLoc)
     anime({
         targets: document.querySelector("div[index='"+targetInd+"']").parentElement,
-        translateX: SPACES*(targetLoc - target.getAttribute("index")),
+        translateX: spaces*(targetLoc - target.getAttribute("index")),
         endDelay: 0,
         delay: 0,
         duration: 100,
         easing: 'easeInOutQuad'
     });
+}
+
+
+function getPositionAtCenter(element) {
+    const {top, left, width, height} = element.getBoundingClientRect();
+    return {
+        x: left + width / 2,
+        y: top + height / 2
+    };
+}
+
+function getXDistanceBetweenElements(a, b) {
+    const aPosition = getPositionAtCenter(a);
+    const bPosition = getPositionAtCenter(b);
+
+    return Math.abs(aPosition.x - bPosition.x);
+}
+
+function getDistanceBetweenElements(a, b) {
+    const aPosition = getPositionAtCenter(a);
+    const bPosition = getPositionAtCenter(b);
+
+    return Math.hypot(aPosition.x - bPosition.x, aPosition.y - bPosition.y);
 }

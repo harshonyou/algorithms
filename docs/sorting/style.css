@@ -4,6 +4,9 @@
   justify-content: center;
   margin: 30px;
   flex-direction: row;
+
+
+  align-content: flex-start;
   /* overflow-x: scroll; */
   /* margin: auto;
   width: 50%;
@@ -26,8 +29,6 @@
   height: 100px;
   margin: 0px;
   display: inline-block;
-
-
 }
 
 .element:hover {
@@ -41,7 +42,8 @@
   justify-content:center;
   white-space: nowrap;
   text-overflow: ellipsis;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: hidden;
 }
 
 /* Color Picker */
