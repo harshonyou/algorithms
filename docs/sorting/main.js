@@ -31,12 +31,6 @@ const COMPARE_OP = 1
 // event handlers for different button
 update.addEventListener("click", function () {
     updateStage();
-    if(values.length>1) {
-        spaces = getXDistanceBetweenElements(
-            document.querySelector("[location='"+0+"']"),
-            document.querySelector("[location='"+1+"']")
-        );
-    }
 });
 
 next.addEventListener("click", function () {
@@ -52,23 +46,37 @@ algo.addEventListener("change", function () {
 });
 
 window.addEventListener('resize', () => {
+    normalize();
+});
+
+let normalize = () => {
     if(values.length>1) {
         spaces = getXDistanceBetweenElements(
             document.querySelector("[location='"+0+"']"),
             document.querySelector("[location='"+1+"']")
         );
     }
-});
+    document.documentElement.style.setProperty(
+        "--tooltop-margin-left",
+        spaces/2+"px"
+    );
+    document.documentElement.style.setProperty(
+        "--tooltop-top",
+        getDistanceFromTopToBottom(document.querySelector("[location='0']"))+"px"
+    );
+}
 
-let print = () => {
-    console.log("Bruh")
+let upd = (e) => {
+    console.log(e)
+    console.log(e.clientY+"px")
+    // document.documentElement.style.setProperty("--tooltop-top", e.clientX+"px")
 }
 
 let updateStage = () => {
     let tableElements = document.querySelectorAll(".element");
 
     tableElements.forEach(function(element) {
-        element.removeEventListener("click", print);
+        element.removeEventListener("click", upd);
     });
 
     let rawValues = document.querySelector("#input").value
@@ -88,12 +96,14 @@ let updateStage = () => {
     tableElements = document.querySelectorAll(".element");
 
     tableElements.forEach(function(element) {
-        element.addEventListener("click", print);
+        element.addEventListener("click", upd);
     });
 
     Coloris({
         el: '.coloris'
     });
+
+    normalize();
 }
 
 let sort = () => {
@@ -242,6 +252,11 @@ function getPositionAtCenter(element) {
         x: left + width / 2,
         y: top + height / 2
     };
+}
+
+function getDistanceFromTopToBottom(element) {
+    const {top, left, width, height} = element.getBoundingClientRect();
+    return top + height;
 }
 
 function getXDistanceBetweenElements(a, b) {

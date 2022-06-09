@@ -79,17 +79,19 @@
 /* FLOW: DOWN */
 [tooltip][flow^="down"]::before {
   /* top: 100%; */
-  top: 80%;
+  /* top: 80%; */
   border-top-width: 0;
   border-bottom-color: #333;
+  top: var(--tooltop-top);
 }
 [tooltip][flow^="down"]::after {
   /* top: calc(100% + 5px); */
-  top: calc(80% + 5px);
+  top: calc(var(--tooltop-top) + 5px);
 }
 [tooltip][flow^="down"]::before,
 [tooltip][flow^="down"]::after {
   /* left: 50%; */
+  margin-left: var(--tooltop-margin-left);
   transform: translate(-50%, .5em);
 }
 
