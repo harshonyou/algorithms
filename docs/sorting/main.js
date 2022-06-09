@@ -90,7 +90,7 @@ let updateStage = () => {
     removeDivs()
     let i=0;
     values.forEach(element => {
-        addElement(element, (element*vh)+"px", i++)
+        addElement(element, (element*vh < 5 ? "5px" : element*vh+"px"), i++)
     });
 
     steps = []
