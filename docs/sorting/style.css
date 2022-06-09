@@ -29,8 +29,6 @@
   height: 100px;
   margin: 0px;
   display: inline-block;
-
-
 }
 
 .element:hover {
@@ -44,7 +42,8 @@
   justify-content:center;
   white-space: nowrap;
   text-overflow: ellipsis;
-  /* overflow: hidden; */
+  overflow-x: hidden;
+  overflow-y: hidden;
 }
 
 /* Color Picker */
