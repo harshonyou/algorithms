@@ -15,6 +15,7 @@ let sorted = false
 let reverse = false
 let compared = []
 let spaces = 32
+let vh = 60
 
 /*
     OPCODE  |   OPRAND
@@ -83,10 +84,13 @@ let updateStage = () => {
     if (rawValues == "")
         return
     values = rawValues.split(",").map(Number);
+
+    vh = ((window.innerHeight-35)/2)/Math.max(...values)
+
     removeDivs()
     let i=0;
     values.forEach(element => {
-        addElement(element, (element*60)+"px", i++)
+        addElement(element, (element*vh)+"px", i++)
     });
 
     steps = []
