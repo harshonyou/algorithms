@@ -11,7 +11,8 @@
   line-height: 1;
   user-select: none;
   pointer-events: none;
-  position: absolute;
+  /* position: absolute; */
+  position: fixed;
   display: none;
   opacity: 0;
 }
@@ -77,16 +78,18 @@
 
 /* FLOW: DOWN */
 [tooltip][flow^="down"]::before {
-  top: 100%;
+  /* top: 100%; */
+  top: 80%;
   border-top-width: 0;
   border-bottom-color: #333;
 }
 [tooltip][flow^="down"]::after {
-  top: calc(100% + 5px);
+  /* top: calc(100% + 5px); */
+  top: calc(80% + 5px);
 }
 [tooltip][flow^="down"]::before,
 [tooltip][flow^="down"]::after {
-  left: 50%;
+  /* left: 50%; */
   transform: translate(-50%, .5em);
 }
 
