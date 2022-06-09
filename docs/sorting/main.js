@@ -60,6 +60,10 @@ window.addEventListener('resize', () => {
     }
 });
 
+let print = () => {
+    console.log("Bruh")
+}
+
 let updateStage = () => {
     let tableElements = document.querySelectorAll(".element");
 
