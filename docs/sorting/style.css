@@ -7,6 +7,8 @@
 
 
   align-content: flex-start;
+
+  max-height: 50vh;
   /* overflow-x: scroll; */
   /* margin: auto;
   width: 50%;
@@ -36,9 +38,9 @@
 }
 
 .clr-field {
-  margin: 10px 1px 1px 1px;
+  margin: 10px 1px 5px 1px;
 
-  display:flex;
+  display:flex !important;
   justify-content:center;
   white-space: nowrap;
   text-overflow: ellipsis;

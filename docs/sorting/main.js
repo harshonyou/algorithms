@@ -15,6 +15,7 @@ let sorted = false
 let reverse = false
 let compared = []
 let spaces = 32
+let vh = 60
 
 /*
     OPCODE  |   OPRAND
@@ -31,12 +32,6 @@ const COMPARE_OP = 1
 // event handlers for different button
 update.addEventListener("click", function () {
     updateStage();
-    if(values.length>1) {
-        spaces = getXDistanceBetweenElements(
-            document.querySelector("[location='"+0+"']"),
-            document.querySelector("[location='"+1+"']")
-        );
-    }
 });
 
 next.addEventListener("click", function () {
@@ -52,29 +47,50 @@ algo.addEventListener("change", function () {
 });
 
 window.addEventListener('resize', () => {
+    normalize();
+});
+
+let normalize = () => {
     if(values.length>1) {
         spaces = getXDistanceBetweenElements(
             document.querySelector("[location='"+0+"']"),
             document.querySelector("[location='"+1+"']")
         );
     }
-});
+    document.documentElement.style.setProperty(
+        "--tooltop-margin-left",
+        spaces/2+"px"
+    );
+    document.documentElement.style.setProperty(
+        "--tooltop-top",
+        getDistanceFromTopToBottom(document.querySelector("[location='0']"))+"px"
+    );
+}
+
+let upd = (e) => {
+    console.log(e)
+    console.log(e.clientY+"px")
+    // document.documentElement.style.setProperty("--tooltop-top", e.clientX+"px")
+}
 
 let updateStage = () => {
     let tableElements = document.querySelectorAll(".element");
 
     tableElements.forEach(function(element) {
-        element.removeEventListener("click", print);
+        element.removeEventListener("click", upd);
     });
 
     let rawValues = document.querySelector("#input").value
     if (rawValues == "")
         return
     values = rawValues.split(",").map(Number);
+
+    vh = ((window.innerHeight-35)/2)/Math.max(...values)
+
     removeDivs()
     let i=0;
     values.forEach(element => {
-        addElement(element, (element*60)+"px", i++)
+        addElement(element, (element*vh < 10 ? "10px" : element*vh+"px"), i++)
     });
 
     steps = []
@@ -84,12 +100,14 @@ let updateStage = () => {
     tableElements = document.querySelectorAll(".element");
 
     tableElements.forEach(function(element) {
-        element.addEventListener("click", print);
+        element.addEventListener("click", upd);
     });
 
     Coloris({
         el: '.coloris'
     });
+
+    normalize();
 }
 
 let sort = () => {
@@ -100,6 +118,9 @@ let sort = () => {
             break;
         case "selection":
             selection(values, steps)
+            break;
+        case "insertion":
+            insertion(values, steps)
             break;
         default:
             break;
@@ -238,6 +259,11 @@ function getPositionAtCenter(element) {
         x: left + width / 2,
         y: top + height / 2
     };
+}
+
+function getDistanceFromTopToBottom(element) {
+    const {top, left, width, height} = element.getBoundingClientRect();
+    return top + height;
 }
 
 function getXDistanceBetweenElements(a, b) {
