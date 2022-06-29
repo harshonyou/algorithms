@@ -90,7 +90,7 @@ let updateStage = () => {
     removeDivs()
     let i=0;
     values.forEach(element => {
-        addElement(element, (element*vh < 5 ? "5px" : element*vh+"px"), i++)
+        addElement(element, (element*vh < 10 ? "10px" : element*vh+"px"), i++)
     });
 
     steps = []
@@ -118,6 +118,9 @@ let sort = () => {
             break;
         case "selection":
             selection(values, steps)
+            break;
+        case "insertion":
+            insertion(values, steps)
             break;
         default:
             break;
